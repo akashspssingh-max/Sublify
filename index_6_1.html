@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html translate="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google" content="notranslate">
+<meta http-equiv="Content-Language" content="sv">
+<script>
+// Prevent Google Translate from wrapping elements in <font> tags which breaks clicks
+document.addEventListener('DOMContentLoaded', function(){
+  var obs = new MutationObserver(function(mutations){
+    mutations.forEach(function(m){
+      m.addedNodes.forEach(function(n){
+        if(n.nodeName==='FONT'){
+          var p=n.parentNode;
+          while(n.firstChild) p.insertBefore(n.firstChild,n);
+          p.removeChild(n);
+        }
+      });
+    });
+  });
+  obs.observe(document.body,{childList:true,subtree:true});
+});
+</script>
+<title>Sublify — Vikariehantering för skolor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#0F0E0C;
+  --ink2:#3A3830;
+  --muted:#7A7670;
+  --border:#E5E2DA;
+  --cream:#FAF8F3;
+  --white:#FFFFFF;
+  --gold:#C8962E;
+  --gold-light:#F7EDDA;
+  --blue:#2558A8;
+  --blue-light:#EBF1FB;
+  --teal:#1A6E67;
+  --teal-light:#E0F0EE;
+}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--white);
+  color:var(--ink);
+  line-height:1.6;
+  font-size:16px;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;height:64px;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:'DM Serif Display',serif;
+  font-size:22px;color:var(--ink);letter-spacing:-.02em;
+}
+.nav-logo span{color:var(--gold);}
+.nav-links{display:flex;align-items:center;gap:2rem;}
+.nav-links a{
+  font-size:14px;font-weight:500;color:var(--ink2);
+  text-decoration:none;transition:color .15s;
+}
+.nav-links a:hover{color:var(--blue);}
+.nav-cta{
+  background:var(--ink);color:var(--white);
+  padding:.45rem 1.25rem;border-radius:8px;
+  font-size:14px;font-weight:600;text-decoration:none;
+  transition:background .15s;
+}
+.nav-cta:hover{background:var(--blue);}
+
+/* ── LANGUAGE SWITCHER ── */
+.nav-right{display:flex;align-items:center;gap:.9rem;}
+.lang-switch{position:relative;}
+.lang-btn{
+  display:flex;align-items:center;gap:.4rem;
+  background:none;border:1.5px solid var(--border);border-radius:8px;
+  padding:.42rem .8rem;font-size:13.5px;font-weight:600;color:var(--ink2);
+  cursor:pointer;font-family:inherit;transition:all .15s;
+}
+.lang-btn:hover{border-color:var(--blue);color:var(--blue);}
+.lang-caret{font-size:9px;transition:transform .15s;}
+.lang-switch.open .lang-caret{transform:rotate(180deg);}
+.lang-menu{
+  position:absolute;top:calc(100% + 8px);right:0;
+  background:var(--white);border:1px solid var(--border);border-radius:10px;
+  box-shadow:0 12px 32px rgba(15,14,12,.14);
+  min-width:150px;padding:.35rem;
+  opacity:0;visibility:hidden;transform:translateY(-6px);
+  transition:all .15s;z-index:200;
+}
+.lang-switch.open .lang-menu{opacity:1;visibility:visible;transform:translateY(0);}
+.lang-option{
+  display:flex;align-items:center;gap:.55rem;width:100%;
+  background:none;border:none;border-radius:7px;
+  padding:.55rem .65rem;font-size:14px;font-weight:500;color:var(--ink2);
+  cursor:pointer;font-family:inherit;text-align:left;transition:background .12s;
+}
+.lang-option:hover{background:var(--cream);}
+.lang-option.active{color:var(--blue);font-weight:700;background:var(--blue-light);}
+.lang-flag{font-size:16px;}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:100px 5% 80px;
+  background:var(--cream);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;
+  top:-200px;right:-100px;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(200,150,46,.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-inner{
+  max-width:1100px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:center;
+}
+.hero-label{
+  display:inline-block;
+  background:var(--gold-light);color:var(--gold);
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;margin-bottom:1.25rem;
+}
+.hero h1{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(2.4rem,5vw,3.6rem);
+  line-height:1.12;letter-spacing:-.03em;
+  color:var(--ink);margin-bottom:1.25rem;
+}
+.hero h1 em{
+  font-style:italic;color:var(--gold);
+}
+.hero-sub{
+  font-size:1.1rem;color:var(--ink2);line-height:1.65;
+  max-width:460px;margin-bottom:2.25rem;
+}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;}
+.btn-primary{
+  background:var(--ink);color:var(--white);
+  padding:.7rem 1.75rem;border-radius:9px;
+  font-size:15px;font-weight:600;text-decoration:none;
+  transition:all .15s;display:inline-flex;align-items:center;gap:.5rem;
+}
+.btn-primary:hover{background:var(--blue);transform:translateY(-1px);}
+.btn-secondary{
+  color:var(--ink2);font-size:14px;font-weight:600;
+  text-decoration:none;display:inline-flex;align-items:center;gap:.35rem;
+  border:1.5px solid var(--border);border-radius:9px;
+  padding:.68rem 1.5rem;
+  transition:all .15s;
+}
+.btn-secondary:hover{color:var(--blue);border-color:var(--blue);background:var(--blue-light);}
+.hero-stats{
+  display:flex;gap:2rem;margin-top:2.5rem;padding-top:2rem;
+  border-top:1px solid var(--border);
+}
+.stat-item .num{
+  font-family:'DM Serif Display',serif;
+  font-size:2rem;color:var(--ink);
+}
+.stat-item .lbl{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* Hero visual */
+.hero-visual{
+  background:var(--white);border-radius:16px;
+  border:1px solid var(--border);
+  box-shadow:0 20px 60px rgba(15,14,12,.10);
+  overflow:hidden;
+}
+.visual-topbar{
+  background:var(--ink);padding:.75rem 1.1rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.visual-logo{
+  font-family:'DM Serif Display',serif;font-size:16px;color:var(--white);
+}
+.visual-logo span{color:var(--gold);}
+.visual-dots{display:flex;gap:5px;}
+.visual-dot{width:8px;height:8px;border-radius:50%;}
+.visual-body{padding:1.1rem;}
+.visual-row{
+  display:flex;align-items:center;gap:.75rem;
+  padding:.55rem .75rem;border-radius:8px;margin-bottom:.4rem;
+  background:var(--cream);border:1px solid var(--border);
+}
+.visual-av{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;flex-shrink:0;
+}
+.visual-info{flex:1;}
+.visual-name{font-size:12.5px;font-weight:600;}
+.visual-sub{font-size:10.5px;color:var(--muted);}
+.visual-badge{
+  font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;
+  text-transform:uppercase;letter-spacing:.04em;
+}
+.badge-absent{background:#FAEAE7;color:#C84B38;}
+.badge-covered{background:var(--teal-light);color:var(--teal);}
+.badge-free{background:var(--blue-light);color:var(--blue);}
+.visual-lesson{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:8px;padding:.65rem .9rem;margin-bottom:.4rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.visual-lesson-info .vl-title{font-size:12.5px;font-weight:600;}
+.visual-lesson-info .vl-time{font-size:10.5px;color:var(--muted);}
+.visual-confirm{
+  background:var(--teal);color:#fff;
+  font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:6px;
+  border:none;cursor:pointer;
+}
+.visual-lesson.covered{border-color:var(--teal);background:var(--teal-light);}
+
+/* ── SECTION SHARED ── */
+section{padding:6rem 5%;}
+.section-inner{max-width:1100px;margin:0 auto;}
+.section-tag{
+  display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;
+}
+.section-title{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(1.9rem,4vw,2.75rem);
+  letter-spacing:-.025em;line-height:1.18;
+  margin-bottom:1rem;color:var(--ink);
+}
+.section-lead{
+  font-size:1.05rem;color:var(--ink2);
+  max-width:560px;line-height:1.65;
+}
+
+/* ── PROBLEM ── */
+.problem{background:var(--ink);}
+.problem .section-title{color:var(--white);}
+.problem .section-lead{color:rgba(255,255,255,.6);}
+.problem .section-tag{color:rgba(255,255,255,.35);}
+.problem-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1.5rem;margin-top:3rem;
+}
+.prob-card{
+  border:1px solid rgba(255,255,255,.08);border-radius:12px;
+  padding:1.5rem;background:rgba(255,255,255,.04);
+}
+.prob-icon{font-size:28px;margin-bottom:.85rem;}
+.prob-title{font-size:15px;font-weight:600;color:var(--white);margin-bottom:.5rem;}
+.prob-text{font-size:13.5px;color:rgba(255,255,255,.5);line-height:1.6;}
+
+/* ── FEATURES ── */
+.features{background:var(--cream);}
+.features-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1.5rem;margin-top:3rem;
+}
+.feat-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:14px;padding:1.75rem;
+  transition:box-shadow .2s,transform .2s;
+}
+.feat-card:hover{
+  box-shadow:0 8px 32px rgba(15,14,12,.08);
+  transform:translateY(-2px);
+}
+.feat-icon{
+  width:44px;height:44px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:1rem;
+}
+.feat-title{font-size:16px;font-weight:600;margin-bottom:.5rem;}
+.feat-text{font-size:13.5px;color:var(--ink2);line-height:1.6;}
+
+/* ── HOW IT WORKS ── */
+.how{background:var(--white);}
+.steps{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1.5rem;margin-top:3rem;position:relative;
+}
+.steps::before{
+  content:'';position:absolute;
+  top:28px;left:calc(12.5% + 20px);right:calc(12.5% + 20px);
+  height:1px;background:var(--border);
+}
+.step{text-align:center;position:relative;}
+.step-num{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--ink);color:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Serif Display',serif;font-size:18px;
+  margin:0 auto 1rem;position:relative;z-index:1;
+}
+.step-title{font-size:14px;font-weight:600;margin-bottom:.4rem;}
+.step-text{font-size:12.5px;color:var(--muted);line-height:1.55;}
+
+/* ── PRICING ── */
+.pricing{background:var(--cream);}
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1.5rem;margin-top:3rem;
+}
+.price-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:16px;padding:2rem;position:relative;
+}
+.price-card.featured{
+  background:var(--ink);border-color:var(--ink);
+  box-shadow:0 12px 40px rgba(15,14,12,.18);
+}
+.price-card.featured *:not(.price-badge){color:var(--white) !important;}
+.price-badge{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  background:var(--gold);color:var(--ink);
+  font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  padding:3px 12px;border-radius:20px;
+}
+.price-tier{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+.price-size{font-size:13px;color:var(--ink2);margin-bottom:1.25rem;}
+.price-amount{
+  font-family:'DM Serif Display',serif;
+  font-size:2.5rem;letter-spacing:-.03em;color:var(--ink);
+  margin-bottom:.25rem;
+}
+.price-amount span{font-size:14px;font-family:'DM Sans',sans-serif;font-weight:400;color:var(--muted);}
+.price-desc{font-size:12.5px;color:var(--muted);margin-bottom:1.5rem;}
+.price-features{list-style:none;margin-bottom:1.75rem;}
+.price-features li{
+  font-size:13.5px;color:var(--ink2);padding:.35rem 0;
+  display:flex;align-items:center;gap:.5rem;
+  border-bottom:1px solid var(--border);
+}
+.price-features li:last-child{border-bottom:none;}
+.price-features li::before{content:'✓';color:var(--teal);font-weight:700;flex-shrink:0;}
+.price-card.featured .price-features li{border-bottom-color:rgba(255,255,255,.1);}
+.price-card.featured .price-features li::before{color:#6ee7df;}
+.price-btn{
+  display:block;text-align:center;text-decoration:none;
+  padding:.6rem;border-radius:8px;font-size:14px;font-weight:600;
+  border:1.5px solid var(--border);color:var(--ink);
+  transition:all .15s;
+}
+.price-btn:hover{background:var(--ink);color:var(--white);border-color:var(--ink);}
+.price-card.featured .price-btn{
+  background:var(--gold);color:var(--ink);border-color:var(--gold);
+}
+.price-card.featured .price-btn:hover{background:#b07e20;border-color:#b07e20;}
+.price-note{
+  text-align:center;margin-top:1.5rem;
+  font-size:13px;color:var(--muted);
+}
+
+/* ── CTA ── */
+.cta-section{
+  background:var(--ink);padding:5rem 5%;text-align:center;
+}
+.cta-section .section-title{color:var(--white);}
+.cta-section p{color:rgba(255,255,255,.7);font-size:1.05rem;margin:1rem auto 2rem;max-width:500px;}
+.cta-btn{
+  display:inline-block;background:var(--gold);color:var(--ink);
+  padding:.75rem 2.25rem;border-radius:9px;
+  font-size:15px;font-weight:700;text-decoration:none;
+  transition:all .15s;
+}
+.cta-btn:hover{background:#b07e20;transform:translateY(-1px);}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--ink);padding:3rem 5% 2rem;
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:2rem;max-width:100%;
+}
+.footer-brand .logo{
+  font-family:'DM Serif Display',serif;
+  font-size:20px;color:var(--white);
+}
+.footer-brand .logo span{color:var(--gold);}
+.footer-brand p{font-size:13px;color:rgba(255,255,255,.4);margin-top:.5rem;max-width:220px;line-height:1.6;}
+.footer-col h4{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.85rem;}
+.footer-col a{display:block;font-size:13.5px;color:rgba(255,255,255,.55);text-decoration:none;margin-bottom:.4rem;transition:color .12s;}
+.footer-col a:hover{color:var(--white);}
+.footer-bottom{
+  background:var(--ink);padding:.75rem 5% 1.5rem;
+  border-top:1px solid rgba(255,255,255,.06);
+  text-align:center;font-size:12px;color:rgba(255,255,255,.25);
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-visual{display:none;}
+  .problem-grid,.features-grid,.pricing-grid{grid-template-columns:1fr 1fr;}
+  .steps{grid-template-columns:1fr 1fr;}
+  .steps::before{display:none;}
+  footer{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:580px){
+  .problem-grid,.features-grid,.pricing-grid{grid-template-columns:1fr;}
+  .steps{grid-template-columns:1fr;}
+  footer{grid-template-columns:1fr;}
+  .nav-links{display:none;}
+  .hero-stats{flex-wrap:wrap;gap:1rem;}
+  .hero h1{font-size:2rem;}
+  .hero-sub{font-size:1rem;}
+  .nav-cta{padding:.4rem .9rem;font-size:13px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo">Sub<span>lify</span></div>
+  <div class="nav-links">
+    <a href="#features" data-i18n="nav.features">Funktioner</a>
+    <a href="#how" data-i18n="nav.how">Så fungerar det</a>
+    <a href="#pricing" data-i18n="nav.pricing">Priser</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch" id="langSwitch">
+      <button class="lang-btn" onclick="toggleLangMenu(event)">
+        🌐 <span id="langBtnLabel">Språk</span> <span class="lang-caret">▾</span>
+      </button>
+      <div class="lang-menu">
+        <button class="lang-option" data-lang="sv" onclick="setLang('sv')"><span class="lang-flag">🇸🇪</span> Svenska</button>
+        <button class="lang-option" data-lang="en" onclick="setLang('en')"><span class="lang-flag">🇬🇧</span> English</button>
+      </div>
+    </div>
+    <a href="school-planner.html" class="nav-cta" data-i18n="nav.login">Logga in →</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-label" data-i18n="hero.label">För alla skolor</div>
+      <h1 data-i18n-html="hero.title">Vikariehantering som <em>faktiskt fungerar</em></h1>
+      <p class="hero-sub" data-i18n="hero.sub">
+        Sublify sparar er 2–3 timmar varje gång en lärare är sjuk.
+        Se vilka lektioner behöver täckas, tilldela vikarier och meddela dem — allt på under en minut.
+      </p>
+      <div class="hero-actions">
+        <a href="#how" class="btn-secondary" data-i18n="hero.cta2">Se hur det fungerar ↓</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="num">3 min</div><div class="lbl" data-i18n="hero.stat1">Att täcka en frånvaro</div></div>
+        <div class="stat-item"><div class="num">100%</div><div class="lbl" data-i18n="hero.stat2">Webbaserat, inget att installera</div></div>
+        <div class="stat-item"><div class="num">GDPR</div><div class="lbl" data-i18n="hero.stat3">Datasäkert &amp; EU-lagrat</div></div>
+      </div>
+    </div>
+
+    <!-- Mini app preview -->
+    <div class="hero-visual">
+      <div class="visual-topbar">
+        <div class="visual-logo">Sub<span>lify</span></div>
+        <div class="visual-dots">
+          <div class="visual-dot" style="background:#ff5f57"></div>
+          <div class="visual-dot" style="background:#febc2e"></div>
+          <div class="visual-dot" style="background:#28c840"></div>
+        </div>
+      </div>
+      <div class="visual-body">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:.65rem;" data-i18n="visual.teachers">Lärare</div>
+        <div class="visual-row">
+          <div class="visual-av" style="background:#FAEAE7;color:#C84B38">AB</div>
+          <div class="visual-info"><div class="visual-name">Anna Björk</div><div class="visual-sub" data-i18n="visual.subj1">Matematik</div></div>
+          <span class="visual-badge badge-absent" data-i18n="visual.absent">Frånvarande</span>
+        </div>
+        <div class="visual-row">
+          <div class="visual-av" style="background:#EBF1FB;color:#2558A8">EL</div>
+          <div class="visual-info"><div class="visual-name">Erik Lindqvist</div><div class="visual-sub" data-i18n="visual.subj2">Svenska</div></div>
+          <span class="visual-badge badge-free" data-i18n="visual.free">Ledig</span>
+        </div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:.85rem 0 .65rem;" data-i18n="visual.needcoverage">Lektioner som behöver täckning</div>
+        <div class="visual-lesson covered">
+          <div class="visual-lesson-info">
+            <div class="vl-title" data-i18n="visual.class9a">Klass 9a — Matematik</div>
+            <div class="vl-time" data-i18n="visual.time1">Tisdag 08:00–09:00</div>
+          </div>
+          <span class="visual-badge badge-covered" style="font-size:10px;" data-i18n="visual.covered">✓ Täckt</span>
+        </div>
+        <div class="visual-lesson">
+          <div class="visual-lesson-info">
+            <div class="vl-title" data-i18n="visual.class8">Klass 8 — Matematik</div>
+            <div class="vl-time" data-i18n="visual.time2">Tisdag 11:15–12:05</div>
+          </div>
+          <button class="visual-confirm" data-i18n="visual.confirm">Bekräfta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROBLEM ── -->
+<section class="problem">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="problem.tag">Problemet</div>
+    <h2 class="section-title" data-i18n="problem.title">Varje frånvaro kostar tid ni inte har</h2>
+    <p class="section-lead" data-i18n="problem.lead">Att hantera vikarier manuellt är en av skolans mest tidskrävande administrativa uppgifter — och det händer varje dag.</p>
+    <div class="problem-grid">
+      <div class="prob-card">
+        <div class="prob-icon">📞</div>
+        <div class="prob-title" data-i18n="problem.c1t">Telefonrundor på morgonen</div>
+        <div class="prob-text" data-i18n="problem.c1x">Rektorer och administratörer ringer runt till lärare för att hitta någon som kan täcka — ofta i panik kl 07:30.</div>
+      </div>
+      <div class="prob-card">
+        <div class="prob-icon">📋</div>
+        <div class="prob-title" data-i18n="problem.c2t">Pappersscheman och Excel</div>
+        <div class="prob-text" data-i18n="problem.c2x">Det är svårt att se vem som är ledig, vem som redan har för många vikarier och vilka lektioner som saknas täckning.</div>
+      </div>
+      <div class="prob-card">
+        <div class="prob-icon">😓</div>
+        <div class="prob-title" data-i18n="problem.c3t">Lärare som inte vet</div>
+        <div class="prob-text" data-i18n="problem.c3x">Vikarier får inte besked i tid och vet inte vart de ska gå, vilket klass de ska ha eller vad de ska göra.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ── -->
+<section class="features" id="features">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="features.tag">Funktioner</div>
+    <h2 class="section-title" data-i18n="features.title">Allt ni behöver, inget ni inte behöver</h2>
+    <p class="section-lead" data-i18n="features.lead">Sublify är byggt specifikt för svenska grundskolor och gymnasier — med de arbetsflöden era administratörer faktiskt använder.</p>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon" style="background:#EBF1FB;">📅</div>
+        <div class="feat-title" data-i18n="features.f1t">Visuellt veckoschema</div>
+        <div class="feat-text" data-i18n="features.f1x">Se alla klassers schema i en tydlig kalendervy. Markera en lärare som frånvarande och se direkt vilka lektioner som behöver täckas.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:#E0F0EE;">⚡</div>
+        <div class="feat-title" data-i18n="features.f2t">Smart vikarietilldelning</div>
+        <div class="feat-text" data-i18n="features.f2x">Systemet visar automatiskt vilka lärare som är lediga, respekterar gränser för antal vikariat per vecka och månad, och blockerar dem som redan har lektion.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:#F7EDDA;">👥</div>
+        <div class="feat-title" data-i18n="features.f3t">Separata behörigheter</div>
+        <div class="feat-text" data-i18n="features.f3x">Administratörer hanterar allt. Lärare loggar in och ser sitt eget schema. Tydliga roller — ingen ser mer än de behöver.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:#EBF1FB;">🏫</div>
+        <div class="feat-title" data-i18n="features.f4t">Flera skolor</div>
+        <div class="feat-text" data-i18n="features.f4x">Kör flera skolors schema i samma system. Varje skolas data är helt separerad — ingen blandning, inga misstag.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:#E0F0EE;">💬</div>
+        <div class="feat-title" data-i18n="features.f5t">Inbyggd chatt</div>
+        <div class="feat-text" data-i18n="features.f5x">Skicka meddelanden direkt till specifika lärare eller hela kollegiet. Bifoga filer. All kommunikation kring vikarier på ett ställe.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:#F7EDDA;">📱</div>
+        <div class="feat-title" data-i18n="features.f6t">Fungerar på alla enheter</div>
+        <div class="feat-text" data-i18n="features.f6x">Webbaserat — ingen app att installera, inga uppdateringar att hantera. Fungerar på dator, surfplatta och telefon.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="how" id="how">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="how.tag">Så fungerar det</div>
+    <h2 class="section-title" data-i18n="how.title">Från frånvaroanmälan till täckt lektion</h2>
+    <p class="section-lead" data-i18n="how.lead">Fyra steg. Under tre minuter.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title" data-i18n="how.s1t">Lärare anmäler frånvaro</div>
+        <div class="step-text" data-i18n="how.s1x">Administratören markerar läraren som frånvarande i Sublify och väljer vilka dagar.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title" data-i18n="how.s2t">Systemet visar luckor</div>
+        <div class="step-text" data-i18n="how.s2x">Alla lektioner som saknar lärare visas direkt i vikariefliken med tid, klass och ämne.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title" data-i18n="how.s3t">Tilldela en vikarie</div>
+        <div class="step-text" data-i18n="how.s3x">Välj från listan av tillgängliga lärare — systemet visar vem som är ledig och har kapacitet.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-title" data-i18n="how.s4t">Vikarien meddelas</div>
+        <div class="step-text" data-i18n="how.s4x">Vikarien ser sin tilldelning när de loggar in. Allt dokumenterat, inget glömt.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section">
+  <h2 class="section-title" data-i18n="cta.title">Redo att spara tid varje dag?</h2>
+  <p data-i18n="cta.text">Kom igång idag — det tar fem minuter att sätta upp er skola och börja använda Sublify.</p>
+  <a href="school-planner.html" class="cta-btn" data-i18n="cta.btn">Logga in och börja →</a>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-brand">
+    <div class="logo">Sub<span>lify</span></div>
+    <p data-i18n="footer.tagline">Vikariehantering byggt för svenska skolor av ett svenskt team.</p>
+  </div>
+  <div class="footer-col">
+    <h4 data-i18n="footer.product">Produkt</h4>
+    <a href="#features" data-i18n="nav.features">Funktioner</a>
+    <a href="#how" data-i18n="nav.how">Så fungerar det</a>
+    <a href="school-planner.html" data-i18n="footer.login">Logga in</a>
+  </div>
+  <div class="footer-col">
+    <h4 data-i18n="footer.contact">Kontakt</h4>
+    <a href="mailto:info.sublify@gmail.com">info.sublify@gmail.com</a>
+    <a href="#" data-i18n="footer.privacy">Integritetspolicy</a>
+    <a href="#" data-i18n="footer.terms">Villkor</a>
+  </div>
+</footer>
+<div class="footer-bottom" data-i18n="footer.bottom">
+  © 2026 Sublify. Alla rättigheter förbehållna.
+</div>
+
+<script>
+const I18N = {
+  sv: {
+    'nav.features':'Funktioner','nav.how':'Så fungerar det','nav.pricing':'Priser','nav.login':'Logga in →',
+    'hero.label':'För alla skolor',
+    'hero.title':'Vikariehantering som <em>faktiskt fungerar</em>',
+    'hero.sub':'Sublify sparar er 2–3 timmar varje gång en lärare är sjuk. Se vilka lektioner behöver täckas, tilldela vikarier och meddela dem — allt på under en minut.',
+    'hero.cta2':'Se hur det fungerar ↓',
+    'hero.stat1':'Att täcka en frånvaro','hero.stat2':'Webbaserat, inget att installera','hero.stat3':'Datasäkert &amp; EU-lagrat',
+    'visual.teachers':'Lärare','visual.subj1':'Matematik','visual.subj2':'Svenska',
+    'visual.absent':'Frånvarande','visual.free':'Ledig','visual.needcoverage':'Lektioner som behöver täckning',
+    'visual.class9a':'Klass 9a — Matematik','visual.time1':'Tisdag 08:00–09:00','visual.covered':'✓ Täckt',
+    'visual.class8':'Klass 8 — Matematik','visual.time2':'Tisdag 11:15–12:05','visual.confirm':'Bekräfta',
+    'problem.tag':'Problemet','problem.title':'Varje frånvaro kostar tid ni inte har',
+    'problem.lead':'Att hantera vikarier manuellt är en av skolans mest tidskrävande administrativa uppgifter — och det händer varje dag.',
+    'problem.c1t':'Telefonrundor på morgonen','problem.c1x':'Rektorer och administratörer ringer runt till lärare för att hitta någon som kan täcka — ofta i panik kl 07:30.',
+    'problem.c2t':'Pappersscheman och Excel','problem.c2x':'Det är svårt att se vem som är ledig, vem som redan har för många vikarier och vilka lektioner som saknas täckning.',
+    'problem.c3t':'Lärare som inte vet','problem.c3x':'Vikarier får inte besked i tid och vet inte vart de ska gå, vilket klass de ska ha eller vad de ska göra.',
+    'features.tag':'Funktioner','features.title':'Allt ni behöver, inget ni inte behöver',
+    'features.lead':'Sublify är byggt specifikt för svenska grundskolor och gymnasier — med de arbetsflöden era administratörer faktiskt använder.',
+    'features.f1t':'Visuellt veckoschema','features.f1x':'Se alla klassers schema i en tydlig kalendervy. Markera en lärare som frånvarande och se direkt vilka lektioner som behöver täckas.',
+    'features.f2t':'Smart vikarietilldelning','features.f2x':'Systemet visar automatiskt vilka lärare som är lediga, respekterar gränser för antal vikariat per vecka och månad, och blockerar dem som redan har lektion.',
+    'features.f3t':'Separata behörigheter','features.f3x':'Administratörer hanterar allt. Lärare loggar in och ser sitt eget schema. Tydliga roller — ingen ser mer än de behöver.',
+    'features.f4t':'Flera skolor','features.f4x':'Kör flera skolors schema i samma system. Varje skolas data är helt separerad — ingen blandning, inga misstag.',
+    'features.f5t':'Inbyggd chatt','features.f5x':'Skicka meddelanden direkt till specifika lärare eller hela kollegiet. Bifoga filer. All kommunikation kring vikarier på ett ställe.',
+    'features.f6t':'Fungerar på alla enheter','features.f6x':'Webbaserat — ingen app att installera, inga uppdateringar att hantera. Fungerar på dator, surfplatta och telefon.',
+    'how.tag':'Så fungerar det','how.title':'Från frånvaroanmälan till täckt lektion','how.lead':'Fyra steg. Under tre minuter.',
+    'how.s1t':'Lärare anmäler frånvaro','how.s1x':'Administratören markerar läraren som frånvarande i Sublify och väljer vilka dagar.',
+    'how.s2t':'Systemet visar luckor','how.s2x':'Alla lektioner som saknar lärare visas direkt i vikariefliken med tid, klass och ämne.',
+    'how.s3t':'Tilldela en vikarie','how.s3x':'Välj från listan av tillgängliga lärare — systemet visar vem som är ledig och har kapacitet.',
+    'how.s4t':'Vikarien meddelas','how.s4x':'Vikarien ser sin tilldelning när de loggar in. Allt dokumenterat, inget glömt.',
+    'cta.title':'Redo att spara tid varje dag?',
+    'cta.text':'Kom igång idag — det tar fem minuter att sätta upp er skola och börja använda Sublify.',
+    'cta.btn':'Logga in och börja →',
+    'footer.tagline':'Vikariehantering byggt för svenska skolor av ett svenskt team.',
+    'footer.product':'Produkt','footer.login':'Logga in','footer.contact':'Kontakt',
+    'footer.privacy':'Integritetspolicy','footer.terms':'Villkor',
+    'footer.bottom':'© 2026 Sublify. Alla rättigheter förbehållna.',
+    'title':'Sublify — Vikariehantering för skolor',
+  },
+  en: {
+    'nav.features':'Features','nav.how':'How it works','nav.pricing':'Pricing','nav.login':'Log in →',
+    'hero.label':'For all schools',
+    'hero.title':'Substitute management that <em>actually works</em>',
+    'hero.sub':'Sublify saves you 2–3 hours every time a teacher is out sick. See which lessons need covering, assign substitutes, and notify them — all in under a minute.',
+    'hero.cta2':'See how it works ↓',
+    'hero.stat1':'To cover an absence','hero.stat2':'Web-based, nothing to install','hero.stat3':'Secure &amp; EU-hosted',
+    'visual.teachers':'Teachers','visual.subj1':'Mathematics','visual.subj2':'Swedish',
+    'visual.absent':'Absent','visual.free':'Free','visual.needcoverage':'Lessons needing coverage',
+    'visual.class9a':'Class 9a — Mathematics','visual.time1':'Tuesday 08:00–09:00','visual.covered':'✓ Covered',
+    'visual.class8':'Class 8 — Mathematics','visual.time2':'Tuesday 11:15–12:05','visual.confirm':'Confirm',
+    'problem.tag':'The problem','problem.title':"Every absence costs time you don't have",
+    'problem.lead':"Managing substitutes manually is one of a school's most time-consuming administrative tasks — and it happens every day.",
+    'problem.c1t':'Morning phone rounds','problem.c1x':'Principals and administrators call around trying to find someone to cover — often in a panic at 7:30am.',
+    'problem.c2t':'Paper schedules and spreadsheets','problem.c2x':"It's hard to see who's free, who already has too many substitutions, and which lessons still need covering.",
+    'problem.c3t':'Teachers left in the dark','problem.c3x':"Substitutes aren't notified in time and don't know where to go, which class they have, or what to do.",
+    'features.tag':'Features','features.title':"Everything you need, nothing you don't",
+    'features.lead':'Sublify is built specifically for Swedish primary and secondary schools — around the workflows your administrators actually use.',
+    'features.f1t':'Visual weekly schedule','features.f1x':"See every class's schedule in a clear calendar view. Mark a teacher absent and instantly see which lessons need covering.",
+    'features.f2t':'Smart substitute assignment','features.f2x':'The system automatically shows which teachers are free, enforces weekly and monthly substitution limits, and blocks anyone who already has a lesson.',
+    'features.f3t':'Separate permissions','features.f3x':'Administrators manage everything. Teachers log in and see their own schedule. Clear roles — no one sees more than they need to.',
+    'features.f4t':'Multiple schools','features.f4x':"Run several schools' schedules in the same system. Each school's data is fully separated — no mixing, no mistakes.",
+    'features.f5t':'Built-in chat','features.f5x':'Send messages directly to specific teachers or the whole staff. Attach files. All substitute-related communication in one place.',
+    'features.f6t':'Works on every device','features.f6x':'Web-based — no app to install, no updates to manage. Works on desktop, tablet, and phone.',
+    'how.tag':'How it works','how.title':'From absence report to covered lesson','how.lead':'Four steps. Under three minutes.',
+    'how.s1t':'Teacher reports absence','how.s1x':'The administrator marks the teacher absent in Sublify and selects which days.',
+    'how.s2t':'The system shows the gaps','how.s2x':'Every lesson missing a teacher appears instantly in the substitute tab with time, class, and subject.',
+    'how.s3t':'Assign a substitute','how.s3x':"Choose from the list of available teachers — the system shows who's free and has capacity.",
+    'how.s4t':'The substitute is notified','how.s4x':'The substitute sees their assignment as soon as they log in. Everything documented, nothing forgotten.',
+    'cta.title':'Ready to save time every day?',
+    'cta.text':'Get started today — it takes five minutes to set up your school and start using Sublify.',
+    'cta.btn':'Log in and get started →',
+    'footer.tagline':'Substitute management built for Swedish schools by a Swedish team.',
+    'footer.product':'Product','footer.login':'Log in','footer.contact':'Contact',
+    'footer.privacy':'Privacy policy','footer.terms':'Terms',
+    'footer.bottom':'© 2026 Sublify. All rights reserved.',
+    'title':'Sublify — Substitute management for schools',
+  }
+};
+
+function applyLang(lang){
+  const dict = I18N[lang] || I18N.sv;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(dict[key] !== undefined) el.textContent = dict[key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-html');
+    if(dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+  document.title = dict['title'];
+  document.documentElement.setAttribute('lang', lang);
+  document.getElementById('langBtnLabel').textContent = lang === 'sv' ? 'Svenska' : 'English';
+  document.querySelectorAll('.lang-option').forEach(btn=>{
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+}
+
+function setLang(lang){
+  localStorage.setItem('sublify_lang', lang);
+  applyLang(lang);
+  document.getElementById('langSwitch').classList.remove('open');
+}
+
+function toggleLangMenu(e){
+  e.stopPropagation();
+  document.getElementById('langSwitch').classList.toggle('open');
+}
+
+document.addEventListener('click', function(e){
+  const sw = document.getElementById('langSwitch');
+  if(sw && !sw.contains(e.target)) sw.classList.remove('open');
+});
+
+(function initLang(){
+  const saved = localStorage.getItem('sublify_lang') || 'sv';
+  applyLang(saved);
+})();
+</script>
+
+</body>
+</html>
